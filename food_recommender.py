@@ -1,3 +1,19 @@
+import os, requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# ------------ spoonacular api 관련 데이터 정의 ------------
+# spoonacular api key 가져오기
+SPOON_API_KEY = os.getenv("SPOON_API_KEY")
+spoon_url = "https://api.spoonacular.com/recipes/complexSearch"
+headers = {
+    'Content-Type': 'application/json',
+    'apiKey': SPOON_API_KEY
+}
+
+# ---------------------------------------------------------
+
 option_dict = {
     1 : {"option" : "1. 재료 넣기"},
     2 : {"option" : "2. 재료 조회"},
@@ -37,7 +53,13 @@ def delete_food():
     pass
 
 def recommend_food():
-    pass
+    ingredients = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
+
+    params = {
+        
+    }
+
+    response = requests.get(spoon_url, headers=headers, params=params)
 
 while True:
     # 단순 기능 출력
