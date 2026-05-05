@@ -1,0 +1,70 @@
+option_dict = {
+    1 : {"option" : "1. 재료 넣기"},
+    2 : {"option" : "2. 재료 조회"},
+    3 : {"option" : "3. 재료 삭제"},
+    4 : {"option" : "4. 재료 변경"},
+    5 : {"option" : "5. 음식 추천"},
+}
+
+def show_option():
+    print("="*60)
+    for k, v in option_dict.items():
+        print(f"{k} : {v["option"]}")
+    print("="*60)
+
+def input_option():
+    try:
+        option_num = int(input("원하는 기능을 선택하세요. 종료는 0번: "))
+    except:
+        raise ValueError("숫자만 입력 가능합니다.")
+    # 입력 예외 처리
+    if not option_num:
+        return None
+    elif option_num < 1 or option_num > 5:
+        raise ValueError("요구하는 형식의 값이 아닙니다.")
+    return option_num
+
+def create_food():
+    pass
+
+def read_food():
+    pass
+
+def update_food():
+    pass
+
+def delete_food():
+    pass
+
+def recommend_food():
+    pass
+
+while True:
+    # 단순 기능 출력
+    show_option()
+    
+    while True:
+        # 기능 입력받기
+        try:
+            selected_option = input_option()
+            break
+        except Exception as e:
+            print(e)
+            continue
+    
+    if selected_option == None:
+        break
+
+    
+    # 옵션 수행
+    match selected_option:
+        case 1:
+            create_food()
+        case 2:
+            read_food()
+        case 3:
+            update_food()
+        case 4:
+            delete_food()
+        case 5:
+            recommend_food()
