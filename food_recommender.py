@@ -21,8 +21,8 @@ intolerances_instance = Intolerance()
 option_dict = {
     1 : {"option" : "1. 재료 넣기"},
     2 : {"option" : "2. 재료 조회"},
-    3 : {"option" : "3. 재료 삭제"},
-    4 : {"option" : "4. 재료 변경"},
+    3 : {"option" : "3. 재료 변경"}, # match-case문의 번호와 달라 수정하였습니다.
+    4 : {"option" : "4. 재료 삭제"},
     5 : {"option" : "5. 알레르기 등록"},
     6 : {"option" : "6. 음식 추천"}
 }
