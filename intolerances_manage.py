@@ -114,14 +114,21 @@ class Intolerance:
         # 마지막 확인용 조회
         self.read_intolerances("read")
 
-    def intolerances_list(self):
-        intolerances_list_var = self.read_intolerances("return")
-        for intolerance in intolerances_list_var:
-            
+    def return_intolerances_list(self):
+        intolerances_dict = self.read_intolerances("return")
+        intolerances = list()
+
+        for intolerance in intolerances_dict.items():
+            if intolerance[1].get("check", False):
+                intolerances.append(intolerance[1].get("name", None))
+        return intolerances
+
 
 if __name__ == "__main__":
     try:
         intolerance_manage = Intolerance()
-        intolerance_manage.show_intolerances_option()
+        # intolerance_manage.show_intolerances_option()
+        intolerance = intolerance_manage.return_intolerances_list()
+        print(intolerance)
     except ValueError as e:
         print(e)

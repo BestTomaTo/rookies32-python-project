@@ -15,7 +15,7 @@ spoon_headers = {
 
 # 알레르기 관련 설정
 # instance 생성
-intolerances = Intolerance()
+intolerances_instance = Intolerance()
 
 # ---------------------------------------------------------
 
@@ -61,22 +61,23 @@ def delete_food():
 def intolerances_option():
     """알레르기 관련 설정으로 넘어가는 함수"""
     try:
-        intolerances.show_intolerances_option()
+        intolerances_instance.show_intolerances_option()
     
     except ValueError as e:
         print(e)
 
 def recommend_food():
-    ingredients_list = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
-    ingredients = ",".join(ingredients_list)
-    intolerances_list = intolerances_list() # 알레르기 정보 조회?
+    # ingredients_list = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
+    # ingredients = ",".join(ingredients_list)
+    intolerances_list = intolerances_instance.return_intolerances_list() # 알레르기 정보 조회?
+    intolerances = ",".join(intolerances_list)
 
     params = {
-        "intolerances": intolerances_list,
-        "includeIngredients": ingredients_list
+        "intolerances": intolerances,
+        # "includeIngredients": ingredients_list
     }
 
-    response = requests.get(spoon_url, headers=spoon_headers, params=params)
+    # response = requests.get(spoon_url, headers=spoon_headers, params=params)
 
 while True:
     # 단순 기능 출력
