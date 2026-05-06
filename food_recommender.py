@@ -60,15 +60,11 @@ def delete_food():
 
 def intolerances_option():
     """알레르기 관련 설정으로 넘어가는 함수"""
-    while True:
-        try:
-            intolerances.show_intolerances_option()
-            break
-        
-        except ValueError as e:
-            print(e)
-            continue
-
+    try:
+        intolerances.show_intolerances_option()
+    
+    except ValueError as e:
+        print(e)
 
 def recommend_food():
     ingredients_list = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
