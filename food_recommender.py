@@ -1,5 +1,6 @@
 import os, requests
 from dotenv import load_dotenv
+from intolerances_manage import Intolerance
 
 load_dotenv()
 
@@ -7,10 +8,14 @@ load_dotenv()
 # spoonacular api key 가져오기
 SPOON_API_KEY = os.getenv("SPOON_API_KEY")
 spoon_url = "https://api.spoonacular.com/recipes/complexSearch"
-headers = {
+spoon_headers = {
     'Content-Type': 'application/json',
     'apiKey': SPOON_API_KEY
 }
+
+# 알레르기 관련 설정
+# instance 생성
+intolerances = Intolerance()
 
 # ---------------------------------------------------------
 
@@ -19,7 +24,8 @@ option_dict = {
     2 : {"option" : "2. 재료 조회"},
     3 : {"option" : "3. 재료 삭제"},
     4 : {"option" : "4. 재료 변경"},
-    5 : {"option" : "5. 음식 추천"},
+    5 : {"option" : "5. 알레르기 등록"},
+    6 : {"option" : "6. 음식 추천"}
 }
 
 def show_option():
@@ -36,7 +42,7 @@ def input_option():
     # 입력 예외 처리
     if not option_num:
         return None
-    elif option_num < 1 or option_num > 5:
+    elif option_num < 1 or option_num > 6:
         raise ValueError("요구하는 형식의 값이 아닙니다.")
     return option_num
 
@@ -52,14 +58,29 @@ def update_food():
 def delete_food():
     pass
 
+def intolerances_option():
+    """알레르기 관련 설정으로 넘어가는 함수"""
+    while True:
+        try:
+            intolerances.show_intolerances_option()
+            break
+        
+        except ValueError as e:
+            print(e)
+            continue
+
+
 def recommend_food():
-    ingredients = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
+    ingredients_list = read_food() # 재료를 불러옴 출력 예시? ([egg, sugar])
+    ingredients = ",".join(ingredients_list)
+    intolerances_list = intolerances_list() # 알레르기 정보 조회?
 
     params = {
-        
+        "intolerances": intolerances_list,
+        "includeIngredients": ingredients_list
     }
 
-    response = requests.get(spoon_url, headers=headers, params=params)
+    response = requests.get(spoon_url, headers=spoon_headers, params=params)
 
 while True:
     # 단순 기능 출력
@@ -89,4 +110,6 @@ while True:
         case 4:
             delete_food()
         case 5:
+            intolerances_option()
+        case 6:
             recommend_food()
