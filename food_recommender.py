@@ -1,8 +1,24 @@
 import os, requests
 from dotenv import load_dotenv
 from intolerances_manage import Intolerance
+import json
 
 load_dotenv()
+
+# ------------ 재료 저장(임시) ------------
+ingredients = ["egg","sugar","carrot","apple","jicama","lime"]
+# 실행이 되는지 확인하기 위해 임시로 값 집어넣음
+# 나중에 빈 리스트로 교체 필요 -> line 167의 load_ingredients() 주석 해제 
+def save_ingredients(): # '현재 상태를 노션 DB에 반영'으로 변경 필요
+    with open("foods.json", "w", encoding="utf-8") as f:
+        json.dump(ingredients, f, ensure_ascii=False, indent=4)
+def load_ingredients(): # '노션 DB에 있는 데이터를 메모리로 가져오기'로 변경 필요
+    global ingredients
+    try:
+        with open("foods.json", "r", encoding="utf-8") as f:
+            ingredients = json.load(f)
+    except FileNotFoundError:
+        ingredients = []
 
 # ------------ spoonacular api 관련 데이터 정의 ------------
 # spoonacular api key 가져오기
@@ -49,10 +65,56 @@ def create_food():
     pass
 
 def read_food():
-    pass
+    return ingredients
 
 def update_food():
-    pass
+    ingredients_list = read_food()
+    
+    if not ingredients_list:
+        print("수정할 재료가 없습니다.")
+        return
+
+    while True:
+        try:
+            # 현재 재료 목록 출력
+            print("현재 재료 목록 : ")
+            for i, ingredient in enumerate(ingredients_list):
+                print(f"{i+1}. {ingredient}")
+            
+            # 수정할 재료 선택(번호 or 뒤로가기(b) 입력받기)
+            user_input = input("수정할 재료 번호 (뒤로가기 : b)): ").strip()
+
+            if user_input.lower() == "b":
+                return
+
+            idx = int(user_input) - 1
+
+            if idx < 0 or idx >= len(ingredients_list):
+                raise ValueError("유효한 번호를 입력해주세요.")
+
+            while True:
+                new_ingredient = input("새로운 재료를 입력하세요 : ").strip()
+                # 재료 이름이 비어있을 경우
+                if not new_ingredient:
+                    print("재료 이름은 비어 있을 수 없습니다.")
+                    continue
+
+                # 중복 체크
+                if new_ingredient in ingredients_list:
+                    print("이미 있는 재료입니다. 다른 재료를 입력해주세요.")
+                    continue
+
+                break 
+
+            old_ingredient = ingredients_list[idx]
+            ingredients_list[idx] = new_ingredient
+            save_ingredients() # 변경된 재료 저장
+
+            print(f"재료 '{old_ingredient}'가 '{new_ingredient}'로 변경되었습니다.")
+            break
+        
+        except Exception as e:
+            print(e)
 
 def delete_food():
     pass
@@ -100,6 +162,9 @@ def recommend_food():
         for i in range(len(unused_ingredients)):
             print(f"{i+1}. {unused_ingredients[i].get("name", None)}")
         print("-" * 60)
+
+# --------------- 프로그램 시작 ---------------
+# load_ingredients()  프로그램 시작 시 재료 불러오기
 
 while True:
     # 단순 기능 출력
