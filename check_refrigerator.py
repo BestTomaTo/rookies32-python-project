@@ -51,9 +51,7 @@ def get_notion_refrigerator():
             # 활성화 여부 (checkbox)
             is_active = props.get("활성화 여부", {}).get("checkbox", False)
 
-            quantity = props.get("수량", {}).get("number")
-            if quantity == None:
-                quantity = 0
+            quantity = props.get("수량", {}).get("number") or 0
 
             refrigerator_list.append({
                 "title" : title,
