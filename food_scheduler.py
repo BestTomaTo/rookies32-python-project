@@ -31,8 +31,7 @@ def send_recommended_food(food_recommended):
             <p style="text-align:center; color:#777; font-size:14px;">
                 오늘의 추천 메뉴입니다.
             </p>
-            <img src="cid:image1" style="width:500px; border:1px solid pink">
-
+            
             <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; margin:0 auto;">
                 <tr>
                     <th width="33%" style="background:#fcf4d9; color:#000000; padding:10px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.08); text-align:center">
