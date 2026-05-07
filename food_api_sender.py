@@ -99,6 +99,5 @@ def send_food_api():
     # 사용한 음식 수량 재설정
 
 
-
 if __name__ == "__main__":
     send_food_api()

@@ -3,5 +3,4 @@
 */*.pyc
 */__pycache__/
 */*.json
-food_checker.py
 */.csv
