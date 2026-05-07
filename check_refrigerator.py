@@ -44,6 +44,9 @@ def get_notion_refrigerator():
         for page in page_list:
             props = page.get("properties")
 
+            # 고유 id 추가
+            page_id = page.get("id")
+
             # 재료명 (title)
             title_list = props.get("재료명", {}).get("title", [])
             title = title_list[0].get("plain_text") if title_list else "이름 없음"
@@ -54,19 +57,21 @@ def get_notion_refrigerator():
             quantity = props.get("수량", {}).get("number") or 0
 
             refrigerator_list.append({
+                "id": page_id,
                 "title" : title,
                 "is_active": is_active,
                 "quantity": quantity
             })
 
         return refrigerator_list
-        # refrigerator_list = [
-        # {'title': '달걀', 'is_active': False, 'quantity': 0}, 
-        # {'title': '오이', 'is_active': False, 'quantity': 0}, 
-        # {'title': '우유', 'is_active': False, 'quantity': 0}, 
-        # {'title': '당근', 'is_active': False, 'quantity': 0}, 
-        # {'title': '설탕', 'is_active': False, 'quantity': 0}, 
-        # {'title': '소고기', 'is_active': False, 'quantity': 10}]
+        # [{'id': '358e9b8c-de0a-806d-8132-f629e092e090', 'title': '달걀', 'is_active': True, 'quantity': 5}, 
+        # {'id': '358e9b8c-de0a-8084-85b2-dd351805e8ac', 'title': '오이', 'is_active': False, 'quantity': 0}, 
+        # {'id': '358e9b8c-de0a-808a-94ef-d4b337caebe7', 'title': '우유', 'is_active': True, 'quantity': 1}, 
+        # {'id': '358e9b8c-de0a-80b0-92e7-efdd845fa4b5', 'title': '당근', 'is_active': True, 'quantity': 1}, 
+        # {'id': '358e9b8c-de0a-80de-8e5e-c28e072105c6', 'title': '설탕', 'is_active': True, 'quantity': 5}, 
+        # {'id': '359e9b8c-de0a-810e-9fe7-dd90f403280d', 'title': '소고기', 'is_active': False, 'quantity': 10}, 
+        # {'id': '359e9b8c-de0a-81be-bffd-e7960ef7c391', 'title': '무', 'is_active': False, 'quantity': 3}, 
+        # {'id': '359e9b8c-de0a-81f2-a66b-df9f541521f8', 'title': '오이', 'is_active': False, 'quantity': 4}]
 
 def get_available_refrigerator():
     """
@@ -78,10 +83,13 @@ def get_available_refrigerator():
     available_ingredients = [ingreient for ingreient in ingredient_list if ingreient["quantity"] > 0]
 
     return available_ingredients
-    # available_ingredients = [
-    # {'title': '달걀', 'is_active': True, 'quantity': 5},
-    # {'title': '설탕', 'is_active': True, 'quantity': 5}, 
-    # {'title': '소고기', 'is_active': False, 'quantity': 10}]
+    # [{'id': '358e9b8c-de0a-806d-8132-f629e092e090', 'title': '달걀', 'is_active': True, 'quantity': 5}, 
+    # {'id': '358e9b8c-de0a-808a-94ef-d4b337caebe7', 'title': '우유', 'is_active': True, 'quantity': 1},
+    # {'id': '358e9b8c-de0a-80b0-92e7-efdd845fa4b5', 'title': '당근', 'is_active': True, 'quantity': 1}, 
+    # {'id': '358e9b8c-de0a-80de-8e5e-c28e072105c6', 'title': '설탕', 'is_active': True, 'quantity': 5}, 
+    # {'id': '359e9b8c-de0a-810e-9fe7-dd90f403280d', 'title': '소고기', 'is_active': False, 'quantity': 10}, 
+    # {'id': '359e9b8c-de0a-81be-bffd-e7960ef7c391', 'title': '무', 'is_active': False, 'quantity': 3}, 
+    # {'id': '359e9b8c-de0a-81f2-a66b-df9f541521f8', 'title': '오이', 'is_active': False, 'quantity': 4}]
 
 
 def print_available_refrigerator():
@@ -94,16 +102,18 @@ def print_available_refrigerator():
     if not available_ingredients:
         print("현재 남은 재료가 없습니다")
     else:
-        idx = 1
-        for ingredient in available_ingredients:
+        for idx, ingredient in enumerate(available_ingredients, 1):
             print(f"{idx}. {ingredient["title"]} : {ingredient["quantity"]}개")
-            idx += 1
     print("-"*30)
     #현재 사용 가능한 냉장고 재료
     # ------------------------------
     # 1. 달걀 : 5개
-    # 2. 설탕 : 5개
-    # 3. 소고기 : 10개
+    # 2. 우유 : 1개
+    # 3. 당근 : 1개
+    # 4. 설탕 : 5개
+    # 5. 소고기 : 10개
+    # 6. 무 : 3개
+    # 7. 오이 : 4개
     # ------------------------------
     
 # 테스트용 출력
