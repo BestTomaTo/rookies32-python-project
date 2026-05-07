@@ -64,7 +64,6 @@ def send_food_api():
         elif v == '3': return
         else: continue
         
-
     # API 요청
     SPOON_API_KEY = os.getenv("SPOON_API_KEY")
     spoon_url = "https://api.spoonacular.com/recipes/complexSearch"
@@ -98,7 +97,7 @@ def send_food_api():
         print("-" * 60)
 
     # 사용한 음식 수량 재설정
-    
+
 
 
 if __name__ == "__main__":
