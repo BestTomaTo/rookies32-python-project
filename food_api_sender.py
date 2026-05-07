@@ -30,23 +30,35 @@ from food_checker import get_food
 load_dotenv()
 
 def send_food_api():
-    # 알레르기 DB 조회
-    print("Notion에 가서 알레르기가 있는 재료에 체크하고 오세요!\n")
-    input("완료하셨나요? y/n")
-    intolerance_list = get_allergic()
-    
-    # 냉장고 데이터베이스 조회
-    print("Notion에 가서 사용하고자 하는 재료에 체크하고 오세요!\n")
-    input("완료하셨나요? y/n")
-    nangjango_list = get_food()
+    while True:
+        # 알레르기 DB 조회
+        print("Notion에 가서 알레르기가 있는 재료에 체크하고 오세요!\n")
+        v = input("완료하셨나요? y/n")
+        if v == 'y': intolerance_list = get_allergic() 
+        else: continue
 
-    # 번역
-    google_translator = []
-    
-    
-    # 파라미터화
-    
-    
+        # 냉장고 데이터베이스 조회
+        print("Notion에 가서 사용하고자 하는 재료에 체크하고 오세요!\n")
+        v = input("완료하셨나요? y/n")
+        if v == 'y': nangjango_list = get_food()
+        else: continue
+
+        # 파라미터화
+        print("\n")
+        print("=" * 60)
+        print(f"알레르기 정보 : {intolerance_list}")
+        print(f"알레르기 정보 : {nangjango_list}")
+        print("=" * 60)
+        print("\n")
+        v = input("위 정보가 맞나요? y/n")
+
+        # 번역
+        google_translator = []
+
+        if v == 'y': break
+        else: continue
+        
+
     # API 요청
     SPOON_API_KEY = os.getenv("SPOON_API_KEY")
     spoon_url = "https://api.spoonacular.com/recipes/complexSearch"
