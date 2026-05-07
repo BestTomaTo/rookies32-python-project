@@ -38,6 +38,9 @@ def add_imgredient():
                     }
                 ]
             },
+            "활성화 여부": {
+                "checkbox": False
+            },
             "수량": {
                 "number": ingredient_count
             }
@@ -57,7 +60,7 @@ def add_imgredient():
 
         data = response.json()
         print("재료가 추가되었습니다 !")
-        print(data)
+        # print(data)
 
     # 에러 발생 알림 - 배운 부분이라 추가해봤습니다
     except requests.exceptions.HTTPError as e:
@@ -70,4 +73,5 @@ def add_imgredient():
         print(f"에러 발생 : {e}")
 
 # 함수 실행
-add_imgredient()
+if __name__ == "__main__":
+    add_imgredient()
