@@ -33,13 +33,13 @@ def send_food_api():
     while True:
         # 알레르기 DB 조회
         print("Notion에 가서 알레르기가 있는 재료에 체크하고 오세요!\n")
-        v = input("완료하셨나요? y/n")
+        v = input("완료하셨나요? y/n ")
         if v == 'y': intolerance_list = get_allergic() 
         else: continue
 
         # 냉장고 데이터베이스 조회
         print("Notion에 가서 사용하고자 하는 재료에 체크하고 오세요!\n")
-        v = input("완료하셨나요? y/n")
+        v = input("완료하셨나요? y/n ")
         if v == 'y': nangjango_list = get_food()
         else: continue
 
@@ -47,15 +47,21 @@ def send_food_api():
         print("\n")
         print("=" * 60)
         print(f"알레르기 정보 : {intolerance_list}")
-        print(f"알레르기 정보 : {nangjango_list}")
+        print(f"음색 재료 정보 : {nangjango_list}")
         print("=" * 60)
         print("\n")
-        v = input("위 정보가 맞나요? y/n")
+
+        print("위 정보가 맞나요? \n" \
+        "1. 맞다 \n" \
+        "2. Notion 재설정 \n" \
+        "3. 메인메뉴 \n")
+        v = input("메뉴를 선택해주세요 1/2/3 ")
 
         # 번역
         google_translator = []
 
-        if v == 'y': break
+        if v == '1': break
+        elif v == '3': return
         else: continue
         
 
@@ -90,6 +96,9 @@ def send_food_api():
         for i in range(len(unused_ingredients)):
             print(f"{i+1}. {unused_ingredients[i].get("name", None)}")
         print("-" * 60)
+
+    # 사용한 음식 수량 재설정
+    
 
 
 if __name__ == "__main__":
