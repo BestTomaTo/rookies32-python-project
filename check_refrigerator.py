@@ -45,7 +45,7 @@ def get_notion_refrigerator():
             props = page.get("properties")
 
             # 고유 id 추가
-            page_id = page.get("id")
+            page_id = page.get("id", "id 없음")
 
             # 재료명 (title)
             title_list = props.get("재료명", {}).get("title", [])
