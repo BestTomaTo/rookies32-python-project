@@ -67,7 +67,41 @@ def get_notion_refrigerator():
         # {'title': '당근', 'is_active': False, 'quantity': 0}, 
         # {'title': '설탕', 'is_active': False, 'quantity': 0}, 
         # {'title': '소고기', 'is_active': False, 'quantity': 10}]
+
+def get_available_refrigerator():
+    """
+    사용가능한 재료
+    quantity가 0 이상인 재료들만 반환
+    """
+    ingredient_list = get_notion_refrigerator()
+
+    available_ingredients = [ingreient for ingreient in ingredient_list if ingreient["quantity"] > 0]
+
+    return available_ingredients
+    # available_ingredients = [
+    # {'title': '달걀', 'is_active': True, 'quantity': 5},
+    # {'title': '설탕', 'is_active': True, 'quantity': 5}, 
+    # {'title': '소고기', 'is_active': False, 'quantity': 10}]
+
+
+def print_available_refrigerator():
+    """
+    사용 가능한 재료 출력
+    """
+    available_ingredients = get_available_refrigerator()
+    print("현재 사용 가능한 냉장고 재료")
+    print("-"*30)
+    if not available_ingredients:
+        print("현재 남은 재료가 없습니다")
+    else:
+        idx = 1
+        for ingredient in available_ingredients:
+            print(f"{idx}. {ingredient["title"]} : {ingredient["quantity"]}개")
+            idx += 1
+    print("-"*30)
     
 # 테스트용 출력
 if __name__ == "__main__":
     print(get_notion_refrigerator())
+    print(get_available_refrigerator())
+    print_available_refrigerator()
