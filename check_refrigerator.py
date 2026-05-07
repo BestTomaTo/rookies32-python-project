@@ -99,6 +99,12 @@ def print_available_refrigerator():
             print(f"{idx}. {ingredient["title"]} : {ingredient["quantity"]}개")
             idx += 1
     print("-"*30)
+    #현재 사용 가능한 냉장고 재료
+    # ------------------------------
+    # 1. 달걀 : 5개
+    # 2. 설탕 : 5개
+    # 3. 소고기 : 10개
+    # ------------------------------
     
 # 테스트용 출력
 if __name__ == "__main__":
