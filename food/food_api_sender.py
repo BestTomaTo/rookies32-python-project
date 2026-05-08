@@ -23,20 +23,25 @@ allergic_checker.py              get_notion_refrigerator()                      
 import os
 import requests
 from dotenv import load_dotenv
-from allergic_checker import get_allergic
-from check_refrigerator import get_available_refrigerator
-from food_checker import get_food
-from food_translator import ingredients_translate
+from food.allergic_checker import get_allergic
+from food.check_refrigerator import get_available_refrigerator
+from food.food_checker import get_food
+from food.food_translator import ingredients_translate
 
 load_dotenv()
 
 def send_food_api():
     while True:
-        # 알레르기 DB 조회
-        print("Notion에 가서 알레르기가 있는 재료에 체크하고 오세요!\n")
-        v = input("완료하셨나요? y/n ")
-        if v == 'y': intolerance_list = get_allergic() 
-        else: continue
+        try:
+            # 알레르기 DB 조회
+            print("Notion에 가서 알레르기가 있는 재료에 체크하고 오세요!\n")
+            v = input("완료하셨나요? y/n ")
+            if v == 'y': intolerance_list = get_allergic() 
+            elif v == 'n' : continue
+            else: raise ValueError("이상한 값\n")
+        except ValueError as e:
+            print(e)
+            continue
 
         # 냉장고 데이터베이스 조회
         print("Notion에 가서 사용하고자 하는 재료에 체크하고 오세요!\n")
@@ -75,15 +80,19 @@ def send_food_api():
     }
     
     params = {
-        "intolerances": intolerance_list,
-        "includeIngredients": nangjango_list,
+        "intolerances": " ,".join(intolerance_list),
+        "includeIngredients": " ,".join(nangjango_list),
         "number": 5,
         "fillIngredients": True
     }
     
-    response = requests.get(spoon_url, headers=spoon_headers, params=params)
-    recommend_food_data = response.json().get("results", [])
-
+    try:
+        response = requests.get(spoon_url, headers=spoon_headers, params=params)
+        recommend_food_data = response.json().get("results", [])
+        response.raise_for_status()
+    except Exception as e:
+        print(e)
+    
     print("\n")
     print("=" * 60)
     print("현재 재료로 만들 수 있는 요리는 다음과 같습니다.")
@@ -109,7 +118,7 @@ def send_food_api():
         print(f"냉장고에 없는 재료: {str(unused_ingredients_list)}")
         print("-" * 60)
 
-    # 사용한 음식 수량 재설정
+
 
 
 if __name__ == "__main__":

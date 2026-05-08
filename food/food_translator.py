@@ -83,7 +83,6 @@ def ingredients_translate(ingredients):
     return translated_list
 
 
-
 # 확인용
 if __name__ == "__main__":
 

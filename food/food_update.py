@@ -1,7 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
-from check_refrigerator import get_notion_refrigerator
+from food.check_refrigerator import get_notion_refrigerator
 
 load_dotenv()
 
@@ -71,35 +71,41 @@ def update_food():
         return
 
     while True:
+        # 현재 재료 목록 출력
+        print("현재 재료 목록 : ")
+        for i, ingredient in enumerate(ingredients_list):
+            print(f"{i+1}. {ingredient['title']} : {ingredient['quantity']}개")
+
+        # 수정할 재료 번호 입력 (b 입력 시 뒤로가기)
+        user_input = input("수정할 재료 번호 (뒤로가기 : b): ").strip()
+        if user_input.lower() == "b":
+            return
+
+        # 숫자가 아닌 문자열 입력 시 안내 메시지 출력
         try:
-            # 현재 재료 목록 출력
-            print("현재 재료 목록 : ")
-            for i, ingredient in enumerate(ingredients_list):
-                print(f"{i+1}. {ingredient['title']} : {ingredient['quantity']}개")
-
-            # 수정할 재료 번호 입력 (b 입력 시 뒤로가기)
-            user_input = input("수정할 재료 번호 (뒤로가기 : b): ").strip()
-            if user_input.lower() == "b":
-                return
-
-            # 입력받은 번호를 인덱스로 변환 (1번 → 인덱스 0)
             idx = int(user_input) - 1
-            
-            # 유효하지 않은 번호 입력 시 예외 발생
-            if idx < 0 or idx >= len(ingredients_list):
-                raise ValueError("유효한 번호를 입력해주세요.")
+        except ValueError:
+            print("유효한 번호를 입력해주세요.")
+            continue
 
-            # 선택한 재료 저장
-            selected = ingredients_list[idx]
+        # 범위 벗어난 번호 입력 시 안내 메시지 출력
+        if idx < 0 or idx >= len(ingredients_list):
+            print("유효한 번호를 입력해주세요.")
+            continue
 
-            # 수정할 항목 선택 (재료명 or 수량)
+        # 선택한 재료 저장
+        selected = ingredients_list[idx]
+
+        # 잘못된 입력 시 수정할 항목 선택으로 돌아오도록 내부 while True로 감싸기
+        while True:
             print("\n수정할 항목을 선택하세요.")
             print("1. 재료명 변경")
             print("2. 수량 변경")
-            edit_choice = input("선택 (b: 뒤로가기): ").strip()
+            edit_choice = input("수정 항목 선택 (뒤로가기 : b): ").strip()
 
-            if edit_choice == "b":
-                continue  # 재료 목록 선택으로 돌아가기
+            if edit_choice.lower() == "b":
+                # 재료 목록 선택으로 돌아가기
+                break
 
             elif edit_choice == "1":
                 # 재료명 변경
@@ -120,28 +126,28 @@ def update_food():
                 
                 # 노션 DB에 재료명 수정 요청 후 결과 출력
                 if update_notion_ingredient(selected["id"], new_title=new_title):
+                    selected["title"] = new_title
                     print(f"'{selected['title']}' → '{new_title}'으로 변경되었습니다.")
-                break
+                break  # 수정 완료 후 재료 목록으로 돌아가기
 
             elif edit_choice == "2":
                 # 수량 변경
                 new_quantity = input("새로운 수량을 입력하세요: ").strip()
                 
-                # 숫자가 아니거나 음수일 경우 다시 입력
+                # 숫자가 아니거나 음수일 경우 다시 선택 화면으로
                 if not new_quantity.isdigit() or int(new_quantity) < 0:
                     print("0 이상의 숫자를 입력해주세요.")
                     continue
                 
                 # 노션 DB에 수량 수정 요청 후 결과 출력
                 if update_notion_ingredient(selected["id"], new_quantity=int(new_quantity)):
+                    selected["quantity"] = int(new_quantity)
                     print(f"'{selected['title']}' 수량이 {int(new_quantity)}개로 변경되었습니다.")
-                break
+                break  # 수정 완료 후 재료 목록으로 돌아가기
 
             else:
+                # 1, 2, b 외의 값 입력 시 다시 선택 화면으로
                 print("1 또는 2를 입력해주세요.")
-
-        except Exception as e:
-            print(e)
 
 if __name__ == "__main__":
     update_food()

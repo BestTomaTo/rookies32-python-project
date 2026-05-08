@@ -1,10 +1,9 @@
-import os, requests
 from dotenv import load_dotenv
-from food_api_sender import send_food_api
-from food_additem import add_imgredient
-from check_refrigerator import print_available_refrigerator
-from homework.delete_food import delete_food
-from food_update import update_food
+from food.food_api_sender import send_food_api
+from food.food_additem import add_imgredient
+from food.check_refrigerator import print_available_refrigerator
+from food.food_delete import delete_food
+from food.food_update import update_food
 
 load_dotenv()
 
@@ -16,11 +15,15 @@ option_dict = {
     5 : {"option" : "5. 음식 추천"}
 }
 
-def show_option():
-    print("="*60)
+def show_option(): 
+    
+    print('\n')
+    print("\033[31m<파이썬 프로젝트 7조 - 냉부해>\033[0m")
+    print('\n')
+    print(f"\033[32m{"="*60}\033[0m")
     for k, v in option_dict.items():
         print(f"{k} : {v["option"]}")
-    print("="*60)
+    print(f"\033[32m{"="*60}\033[0m")
 
 def input_option():
     try:
@@ -45,7 +48,7 @@ def update_food_():
 
 def delete_food_():
     name = input("제거할 음식 재료를 입력하세요: ")
-    amount = int(input("제거할 수량을 입력하세요: "))
+    amount = float(input("제거할 수량을 입력하세요: "))
     delete_food(name, amount)
 
 while True:
@@ -68,13 +71,13 @@ while True:
     # 옵션 수행
     match selected_option:
         case 1:
-            create_food()
+            create_food() # 음식 재료 넣기
         case 2:
-            read_food()
+            read_food() # 음식 재료 조회
         case 3:
-            update_food_()
+            update_food_() # 음식 재료 변경
         case 4:
-            delete_food_()
+            delete_food_() # 음식 재료 삭제
         case 5:
-            send_food_api()
+            send_food_api() # 음식 추천 API 전송
            
