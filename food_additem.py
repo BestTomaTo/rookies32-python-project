@@ -17,49 +17,83 @@ additem_headers = {
 
 def add_imgredient():
     """ 사용자에게 재료명과 수량을 입력받음
-    노션 데이터베이스에 추가"""
+    노션 데이터베이스에 추가
+    기존 재료가 있을시 수량 추가
+    없을시 새로 생성"""
 
     # 재료명과 수량 입력 받기
     ingredient_name = input("재료명을 입력해주세요 : ")
     ingredient_count = int(input("수량을 입력해주세요 : "))
 
-    # 노션 데이터베이스에 전송할 데이터
-    payload = {
-        "parent": {
-            "database_id" : DB_ID
-        },
-        "properties": {
-            "재료명": {
-                "title": [
-                    {
-                        "text": {
-                            "content": ingredient_name
-                        }
-                    }
-                ]
-            },
-            "수량": {
-                "number": ingredient_count
+    # 기존 재료 확인
+    try:
+        search_url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
+
+        search_payload = {
+            "filter": {
+                "property": "재료명", 
+                "title": {
+                    "equals": ingredient_name
+                }
             }
         }
-        # 저희 아이콘 설정 부분도 배웠는데 넣는거 어떠신지 !!!!!
-    }
 
-    try:
-        response = requests.post(
-            notion_url,
-            headers = additem_headers,
-            json = payload,
-            timeout=10
-        )
+        response = requests.post(search_url, headers=HEADERS, json=search_payload, timeout=10)
+        response = response.json()
 
-        response.raise_for_status()
+        # 기존 재료가 존재하는 경우
+        if result["results"]:
+            page = result["results"][0]
+            page_id = page["id"]
+            old_count = page["properties"]["수량"]["number"]
+            new_count = old_count + ingredient_count
+            update_url = f"https://api.notion.com/v1/pages/{page_id}"
+            update_payload = {
+                "properties": {
+                    "수량": {
+                        "number": new_count
+                    }
+                }
+            }
+            update_response = requests.patch(search_url, headers=HEADERS, json=search_payload, timeout=10)
+            update_response.raise_for_status()
 
-        data = response.json()
-        print("재료가 추가되었습니다 !")
-        print(data)
+            print("수량 업데이트 완료 !˘◡˘")
 
-    # 에러 발생 알림 - 배운 부분이라 추가해봤습니다
+        else:
+            # 노션 데이터베이스에 전송할 데이터
+            payload = {
+                "parent": {
+                    "database_id" : DB_ID
+                },
+                "properties": {
+                    "재료명": {
+                        "title": [
+                            {
+                                "text": {
+                                    "content": ingredient_name
+                                }
+                            }
+                        ]
+                    },
+                    "수량": {
+                        "number": ingredient_count
+                    }
+                },
+                # 이모지 설정
+                "icon": {
+                    "type": "emoji",
+                    "emoji": "🥩" # 해당하는 이모지
+                }
+            }
+    
+            create_response = requests.post(create_url, headers=HEADERS, create_json=payload, timeout=10)
+
+            create_response.raise_for_status()
+
+            print("새로운 재료가 추가되었습니다 ! ✦‿✦")
+
+    # 에러 발생 알림
     except requests.exceptions.HTTPError as e:
         print(f" 노션 API 에러 : {e}")
 
