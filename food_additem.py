@@ -9,7 +9,7 @@ DB_ID = os.getenv("DATABASE_ID")
 
 notion_url = f"https://api.notion.com/v1/pages"
 
-additem_headers = {
+HEADERS = {
     "Authorization": f"Bearer {NOTION_TOKEN}", 
     "Notion-Version": "2022-06-28", 
     "Content-Type": "application/json"
@@ -37,9 +37,9 @@ def add_imgredient():
                 }
             }
         }
-
         response = requests.post(search_url, headers=HEADERS, json=search_payload, timeout=10)
-        response = response.json()
+        response.raise_for_status()
+        result = response.json()
 
         # 기존 재료가 존재하는 경우
         if result["results"]:
@@ -59,10 +59,11 @@ def add_imgredient():
             update_response.raise_for_status()
 
             print("수량 업데이트 완료 !˘◡˘")
-
+    
         else:
             # 노션 데이터베이스에 전송할 데이터
-            payload = {
+            create_url = "https://api.notion.com/v1/pages"
+            create_payload = {
                 "parent": {
                     "database_id" : DB_ID
                 },
@@ -104,4 +105,5 @@ def add_imgredient():
         print(f"에러 발생 : {e}")
 
 # 함수 실행
-add_imgredient()
+if __name__ == "__main__":
+    add_imgredient()
