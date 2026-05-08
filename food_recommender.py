@@ -45,7 +45,7 @@ def update_food_():
 
 def delete_food_():
     name = input("제거할 음식 재료를 입력하세요: ")
-    amount = int(input("제거할 수량을 입력하세요: "))
+    amount = float(input("제거할 수량을 입력하세요: "))
     delete_food(name, amount)
 
 while True:
