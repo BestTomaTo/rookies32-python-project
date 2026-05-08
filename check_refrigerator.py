@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
 def get_notion_refrigerator():
     """
     노션에서 냉장고 데이터베이스를 읽어와서
