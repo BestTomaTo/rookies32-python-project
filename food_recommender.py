@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from food_api_sender import send_food_api
 from food_additem import add_imgredient
 from check_refrigerator import print_available_refrigerator
+from homework.delete_food import delete_food
 
 load_dotenv()
 
@@ -41,8 +42,10 @@ def read_food():
 def update_food():
     pass
 
-def delete_food():
-    pass
+def delete_food_():
+    name = input("제거할 음식 재료를 입력하세요: ")
+    amount = int(input("제거할 수량을 입력하세요: "))
+    delete_food(name, amount)
 
 while True:
     # 단순 기능 출력
@@ -70,7 +73,7 @@ while True:
         case 3:
             update_food()
         case 4:
-            delete_food()
+            delete_food_()
         case 5:
             send_food_api()
            

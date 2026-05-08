@@ -54,3 +54,8 @@ def delete_food(name, amount):
 
     except Exception as e:
         print(f"에러 났음: {e}")
+
+if __name__ == "__main__":
+    name = input("제거할 음식 재료를 입력하세요: ")
+    amount = int(input("제거할 수량을 입력하세요: "))
+    delete_food(name, amount)
