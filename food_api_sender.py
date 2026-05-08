@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 from allergic_checker import get_allergic
 from check_refrigerator import get_available_refrigerator
 from food_checker import get_food
+from food_translator import ingredients_translate
 
 load_dotenv()
 
@@ -40,7 +41,9 @@ def send_food_api():
         # 냉장고 데이터베이스 조회
         print("Notion에 가서 사용하고자 하는 재료에 체크하고 오세요!\n")
         v = input("완료하셨나요? y/n ")
-        if v == 'y': nangjango_list = get_food()
+        if v == 'y': 
+            nangjango_ko_list = get_food()
+            nangjango_list = ingredients_translate(nangjango_ko_list)
         else: continue
 
         # 파라미터화
@@ -80,20 +83,30 @@ def send_food_api():
     
     response = requests.get(spoon_url, headers=spoon_headers, params=params)
     recommend_food_data = response.json().get("results", [])
-    
+
+    print("\n")
     print("=" * 60)
     print("현재 재료로 만들 수 있는 요리는 다음과 같습니다.")
+    
     for i in range(len(recommend_food_data)):
-        used_ingredients = recommend_food_data[i].get("usedIngredients", [])
-        unused_ingredients = recommend_food_data[i].get("missedIngredients", [])
-        
-        print(f"{i+1}. {recommend_food_data[i].get("title", None)}")
-        print("냉장고에서 사용되는 재료: ")
-        for i in range(len(used_ingredients)):
-            print(f"{i+1}. {used_ingredients[i].get("name", None)}")
-        print("냉장고에 없는 재료: ")
-        for i in range(len(unused_ingredients)):
-            print(f"{i+1}. {unused_ingredients[i].get("name", None)}")
+        used_ingredients_dict_list = recommend_food_data[i].get("usedIngredients", [])
+        used_ingredients_list = []
+
+        for value in used_ingredients_dict_list:
+            used_ingredients_list.append(value.get("name", "Error"))
+
+        unused_ingredients_dict_list = recommend_food_data[i].get("missedIngredients", [])
+        unused_ingredients_list = []
+
+        for value in unused_ingredients_dict_list:
+            unused_ingredients_list.append(value.get("name", "Error"))
+
+        food_en_title = recommend_food_data[i].get("title", None)
+        # food_title = ingredients_translate(food_en_title)[0]
+
+        print(f"{i+1}. {food_en_title}")
+        print(f"냉장고에서 사용되는 재료: {str(used_ingredients_list)}")
+        print(f"냉장고에 없는 재료: {str(unused_ingredients_list)}")
         print("-" * 60)
 
     # 사용한 음식 수량 재설정
