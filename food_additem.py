@@ -55,7 +55,7 @@ def add_imgredient():
                     }
                 }
             }
-            update_response = requests.patch(search_url, headers=HEADERS, json=search_payload, timeout=10)
+            update_response = requests.patch(update_url, headers=HEADERS, json=update_payload, timeout=10)
             update_response.raise_for_status()
 
             print("수량 업데이트 완료 !˘◡˘")
@@ -77,6 +77,9 @@ def add_imgredient():
                             }
                         ]
                     },
+                    "활성화 여부": {
+                        "checkbox": False
+                    },
                     "수량": {
                         "number": ingredient_count
                     }
@@ -88,7 +91,7 @@ def add_imgredient():
                 }
             }
     
-            create_response = requests.post(create_url, headers=HEADERS, create_json=payload, timeout=10)
+            create_response = requests.post(create_url, headers=HEADERS, json=create_payload, timeout=10)
 
             create_response.raise_for_status()
 
